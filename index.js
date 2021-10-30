@@ -62,7 +62,7 @@ async function run() {
         })
 
 
-        //GET API for getting orders from database of a user
+        //GET API for getting orders from database of a particular user
         app.get('/orders/:userEmail', async (req, res) => {
             const userEmail = req.params.userEmail;
             console.log(userEmail);
@@ -75,10 +75,27 @@ async function run() {
             if ((await cursor.count()) === 0) {
                 console.log("No documents found!");
             }
-            // replace console.dir with your callback to access individual elements
+
             const result = await cursor.toArray();
             res.json(result);
         })
+
+
+        //GET API for getting all the orders from database
+        app.get('/orders', async (req, res) => {
+            // query for orders
+            const query = {};
+            const cursor = orderCollection.find(query);
+            // print a message if no documents were found
+            if ((await cursor.count()) === 0) {
+                console.log("No documents found!");
+            }
+
+
+            const result = await cursor.toArray();
+            res.json(result);
+        })
+
 
 
         //GET API for getting a single service
@@ -92,6 +109,22 @@ async function run() {
             // since this method returns the matched document, not a cursor, print it directly
             res.json(service);
 
+        })
+
+        //DELETE API for deleting an order
+        app.delete('/deleteOrder/:id', async (req, res) => {
+            const orderId = req.params.id;
+
+            // Query for order Id
+            const query = { _id: ObjectId(orderId) };
+
+            const result = await orderCollection.deleteOne(query);
+
+            if (result.deletedCount === 1) {
+                console.log("Successfully deleted one document.");
+            } else {
+                console.log("No documents matched the query. Deleted 0 documents.");
+            }
         })
 
     } finally {
