@@ -50,6 +50,20 @@ async function run() {
             res.json(result);
         })
 
+
+        //GET API for getting a single service
+        app.get('/services/:id', async (req, res) => {
+            const serviceId = req.params.id;
+
+            // Query for a service
+            const query = { _id: ObjectId(serviceId) };
+
+            const service = await serviceCollection.findOne(query);
+            // since this method returns the matched document, not a cursor, print it directly
+            res.json(service);
+
+        })
+
     } finally {
         //await client.close();
     }
