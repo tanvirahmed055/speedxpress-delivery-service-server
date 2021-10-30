@@ -25,13 +25,28 @@ async function run() {
         const database = client.db("speedXpress_Db");
         const serviceCollection = database.collection("servicesData");
 
-
+        //POST API for adding a new service
         app.post('/addService', async (req, res) => {
             const newService = req.body;
             console.log(newService);
 
             const result = await serviceCollection.insertOne(newService);
             console.log(`A document was inserted with the _id: ${result.insertedId}`);
+            res.json(result);
+        })
+
+
+        //GET API for getting services from database
+        app.get('/services', async (req, res) => {
+            // query for services 
+            const query = {};
+            const cursor = serviceCollection.find(query);
+            // print a message if no documents were found
+            if ((await cursor.count()) === 0) {
+                console.log("No documents found!");
+            }
+            // replace console.dir with your callback to access individual elements
+            const result = await cursor.toArray();
             res.json(result);
         })
 
