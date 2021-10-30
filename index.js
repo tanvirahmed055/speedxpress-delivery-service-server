@@ -24,6 +24,7 @@ async function run() {
         await client.connect();
         const database = client.db("speedXpress_Db");
         const serviceCollection = database.collection("servicesData");
+        const orderCollection = database.collection("ordersData");
 
         //POST API for adding a new service
         app.post('/addService', async (req, res) => {
@@ -31,6 +32,16 @@ async function run() {
             console.log(newService);
 
             const result = await serviceCollection.insertOne(newService);
+            console.log(`A document was inserted with the _id: ${result.insertedId}`);
+            res.json(result);
+        })
+
+        //POST API for adding orders in orderCollection
+        app.post('/addOrder', async (req, res) => {
+            const newOrder = req.body;
+            console.log(newOrder);
+
+            const result = await orderCollection.insertOne(newOrder);
             console.log(`A document was inserted with the _id: ${result.insertedId}`);
             res.json(result);
         })
