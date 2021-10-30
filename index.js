@@ -127,6 +127,34 @@ async function run() {
             }
         })
 
+
+        //PUT API for updating the order status of an order
+        app.put('/updateOrderStatus/:id', async (req, res) => {
+            const orderId = req.params.id;
+
+            let updatedOrderStatus = req.body.status;
+
+            updatedOrderStatus = 'approved';
+
+            // create a filter for a order to update
+            const filter = { _id: ObjectId(orderId) };
+
+            // this option instructs the method to create a document if no documents match the filter
+            const options = { upsert: true };
+
+            // create a document that sets the plot of the movie
+            const updateDoc = {
+                $set: {
+                    status: `${updatedOrderStatus}`
+                },
+            };
+            const result = await orderCollection.updateOne(filter, updateDoc, options);
+            console.log(
+                `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
+            );
+            res.json(result);
+        })
+
     } finally {
         //await client.close();
     }
