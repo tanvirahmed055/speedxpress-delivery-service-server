@@ -62,6 +62,25 @@ async function run() {
         })
 
 
+        //GET API for getting orders from database of a user
+        app.get('/orders/:userEmail', async (req, res) => {
+            const userEmail = req.params.userEmail;
+            console.log(userEmail);
+
+            // Query for a user's orders
+            const query = { email: userEmail };
+
+            const cursor = orderCollection.find(query);
+            // print a message if no documents were found
+            if ((await cursor.count()) === 0) {
+                console.log("No documents found!");
+            }
+            // replace console.dir with your callback to access individual elements
+            const result = await cursor.toArray();
+            res.json(result);
+        })
+
+
         //GET API for getting a single service
         app.get('/services/:id', async (req, res) => {
             const serviceId = req.params.id;
