@@ -17,12 +17,29 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    console.log("yee db connected");
-    // perform actions on the collection object
-    client.close();
-});
+
+
+async function run() {
+    try {
+        await client.connect();
+        const database = client.db("speedXpress_Db");
+        const serviceCollection = database.collection("servicesData");
+
+
+        app.post('/addService', async (req, res) => {
+            const newService = req.body;
+            console.log(newService);
+
+            const result = await serviceCollection.insertOne(newService);
+            console.log(`A document was inserted with the _id: ${result.insertedId}`);
+            res.json(result);
+        })
+
+    } finally {
+        //await client.close();
+    }
+}
+run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
