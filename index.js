@@ -23,6 +23,7 @@ async function run() {
     try {
         await client.connect();
         const database = client.db("speedXpress_Db");
+        //database collections
         const serviceCollection = database.collection("servicesData");
         const orderCollection = database.collection("ordersData");
         const clientCollection = database.collection("clientsData");
@@ -30,7 +31,7 @@ async function run() {
         //POST API for adding a new service
         app.post('/addService', async (req, res) => {
             const newService = req.body;
-            console.log(newService);
+            //console.log(newService);
 
             const result = await serviceCollection.insertOne(newService);
             console.log(`A document was inserted with the _id: ${result.insertedId}`);
@@ -40,7 +41,7 @@ async function run() {
         //POST API for adding orders in orderCollection
         app.post('/addOrder', async (req, res) => {
             const newOrder = req.body;
-            console.log(newOrder);
+            //console.log(newOrder);
 
             const result = await orderCollection.insertOne(newOrder);
             console.log(`A document was inserted with the _id: ${result.insertedId}`);
@@ -66,7 +67,7 @@ async function run() {
         //GET API for getting orders from database of a particular user
         app.get('/orders/:userEmail', async (req, res) => {
             const userEmail = req.params.userEmail;
-            console.log(userEmail);
+            //console.log(userEmail);
 
             // Query for a user's orders
             const query = { email: userEmail };
