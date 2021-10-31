@@ -25,6 +25,7 @@ async function run() {
         const database = client.db("speedXpress_Db");
         const serviceCollection = database.collection("servicesData");
         const orderCollection = database.collection("ordersData");
+        const clientCollection = database.collection("clientsData");
 
         //POST API for adding a new service
         app.post('/addService', async (req, res) => {
@@ -76,6 +77,20 @@ async function run() {
                 console.log("No documents found!");
             }
 
+            const result = await cursor.toArray();
+            res.json(result);
+        })
+
+        //GET API for getting clients from database
+        app.get('/clients', async (req, res) => {
+            // query for clients 
+            const query = {};
+            const cursor = clientCollection.find(query);
+            // print a message if no documents were found
+            if ((await cursor.count()) === 0) {
+                console.log("No documents found!");
+            }
+            // replace console.dir with your callback to access individual elements
             const result = await cursor.toArray();
             res.json(result);
         })
